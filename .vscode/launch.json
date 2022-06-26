@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/bazel-bin/unittest",
+        "debugServerArgs": "",
+        "filterStderr": true,
+        "filterStdout": false,
+        "serverLaunchTimeout": 20000,
+        "stopAtEntry": true,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        //"logging": {"engineLogging": true, "trace": true, "traceResponse": true}
+      },
+    ]
+  }

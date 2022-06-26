@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "type_traits": "cpp",
+        "array": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "functional": "cpp",
+        "initializer_list": "cpp",
+        "new": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp"
+    }
+}
