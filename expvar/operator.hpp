@@ -42,6 +42,46 @@ auto operator%(Operand auto left, Operand auto right)
     return evaluate<std::modulus>(left, right);
 }
 
+auto operator<(Operand auto left, Operand auto right)
+{
+    return evaluate<std::less>(left, right);
+}
+
+auto operator<=(Operand auto left, Operand auto right)
+{
+    return evaluate<std::less_equal>(left, right);
+}
+
+auto operator>(Operand auto left, Operand auto right)
+{
+    return evaluate<std::greater>(left, right);
+}
+
+auto operator>=(Operand auto left, Operand auto right)
+{
+    return evaluate<std::greater_equal>(left, right);
+}
+
+auto operator==(Operand auto left, Operand auto right)
+{
+    return evaluate<std::equal_to>(left, right);
+}
+
+auto operator!=(Operand auto left, Operand auto right)
+{
+    return evaluate<std::not_equal_to>(left, right);
+}
+
+auto operator&&(Operand auto left, Operand auto right)
+{
+    return evaluate<std::logical_and>(left, right);
+}
+
+auto operator||(Operand auto left, Operand auto right)
+{
+    return evaluate<std::logical_or>(left, right);
+}
+
 template <typename Right, typename Left, typename OP, typename Lambda>
 auto operator>>(BinaryExpr<Left, Right, OP> left, Lambda destination)
 {
