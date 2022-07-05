@@ -4,7 +4,7 @@
 #include <cassert>
 
 struct Context;
-// TODO: support literals
+
 int main(int argc, char **argv)
 {
     expvar::VarSystem setup;
