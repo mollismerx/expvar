@@ -1,9 +1,10 @@
 #pragma once
 
-#include <utility>
-#include <tuple>
 #include <any>
+#include <functional>
+#include <tuple>
 #include <vector>
+#include <utility>
 
 namespace expvar
 {
@@ -31,15 +32,20 @@ private:
     template <typename... Var, std::size_t... Index, typename... Expr>
     auto makeLambdas(std::tuple<Var...> variables, std::index_sequence<Index...>, Expr&&... expressions)
     {
-        storage_.reserve(sizeof...(expressions));
-        return std::make_tuple(Var::compile(store(expressions, storage_[Index])...)...);
+        storage_.resize(sizeof...(expressions));
+        auto lambdas = std::make_tuple(Var::compile(store(expressions, Index)...)...);
+        (storage_[Index].second(), ...);
+        return lambdas;
     }
     template <typename T>
-    static T& store(T&& expression, std::any& storage)
+    T& store(T&& expression, std::size_t index)
     {
-        return storage.emplace<T>(std::forward<T>(expression));
+        auto& [storage, initialiser] = storage_[index];
+        T& expr = storage.emplace<T>(std::forward<T>(expression));
+        initialiser = [&expr]() { expr.init(); };
+        return expr;
     }
-    std::vector<std::any> storage_;
+    std::vector<std::pair<std::any, std::function<void()>>> storage_;
 };
 
 } // namespace expvar

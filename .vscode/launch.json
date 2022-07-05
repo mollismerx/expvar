@@ -15,6 +15,7 @@
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
+        "setupCommands": [ { "text": "-enable-pretty-printing", "description": "Enable GDB pretty printers"} ]
         //"logging": {"engineLogging": true, "trace": true, "traceResponse": true}
       },
     ]

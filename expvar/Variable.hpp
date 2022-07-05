@@ -10,11 +10,13 @@ template <typename T, typename Context, int N>
 struct Variable
 {
     template <typename U>
-    static constexpr bool uses = std::is_same_v<T, U>;
+    static constexpr bool uses = std::is_same_v<Variable, U>;
     using Type = T;
     Type val_{};
-    // masquerade as function to allow 
+    // masquerade as function to allow generic code 
     T operator()() const { return val_; }
+    void init() { };
+    Variable& operator=(T val) { val_ = val; return *this; }
     template <typename... E>
     static auto compile(E&... expr)
     {

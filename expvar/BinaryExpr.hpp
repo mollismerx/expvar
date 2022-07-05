@@ -57,6 +57,13 @@ struct BinaryExpr
             return [](Type) {};
         }
     }
+    void init()
+    {
+        left_.init();
+        right_.init();
+        val_(op_(left_(), right_()));
+
+    }
 };
 
 template <typename Left, typename Right, typename OP, typename Destination>
