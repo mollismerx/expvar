@@ -10,6 +10,7 @@ struct Value
 {
     template <typename U>
     static constexpr bool uses = false;
+    using Type = T;
     T val_{};
     void init() { }
     void operator()(T val) { val_ = val; }    
