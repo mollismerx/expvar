@@ -2,10 +2,13 @@
 
 #include <any>
 #include <functional>
+#include <map>
 #include <tuple>
-#include <vector>
+#include <typeindex>
+#include <type_traits>
 #include <utility>
 
+template <typename T> struct Debug;
 namespace expvar
 {
 
@@ -20,7 +23,9 @@ public:
     template <typename... Var, typename... Expr>
     auto makeSetters(std::tuple<Var...> variables, Expr&&... expressions)
     {
-        return makeLambdas(variables, std::index_sequence_for<Expr...>{}, std::forward<Expr>(expressions)...);
+        auto lambdas = std::make_tuple(Var::compile(store(expressions)...)...);
+        (storage_[typeid(std::decay_t<Expr>)].second(), ...);
+        return lambdas;
     }
 
 private:
@@ -29,23 +34,24 @@ private:
     {
         return std::make_tuple(Variable<Types, Context, Index>{}...);
     }
-    template <typename... Var, std::size_t... Index, typename... Expr>
-    auto makeLambdas(std::tuple<Var...> variables, std::index_sequence<Index...>, Expr&&... expressions)
-    {
-        storage_.resize(sizeof...(expressions));
-        auto lambdas = std::make_tuple(Var::compile(store(expressions, Index)...)...);
-        (storage_[Index].second(), ...);
-        return lambdas;
-    }
     template <typename T>
-    T& store(T&& expression, std::size_t index)
+    T& store(T&& expression)
     {
-        auto& [storage, initialiser] = storage_[index];
-        T& expr = storage.emplace<T>(std::forward<T>(expression));
-        initialiser = [&expr]() { expr.init(); };
-        return expr;
+        using Expr = std::decay_t<T>;
+        auto [pos, insert] = storage_.try_emplace(typeid(Expr));
+        auto& [storage, initialiser] = pos->second;
+        if (insert)
+        {
+            Expr& expr = storage.emplace<Expr>(std::forward<Expr>(expression));
+            initialiser = [&expr]() { expr.init(); };
+            return expr;
+        }
+        else
+        {
+            return *std::any_cast<Expr>(&storage);
+        }
     }
-    std::vector<std::pair<std::any, std::function<void()>>> storage_;
+    std::map<std::type_index, std::pair<std::any, std::function<void()>>> storage_;
 };
 
 } // namespace expvar
