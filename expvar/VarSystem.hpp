@@ -15,6 +15,9 @@ namespace expvar
 class VarSystem
 {
 public:
+    VarSystem() = default;
+    VarSystem(VarSystem const&) = delete;
+    VarSystem& operator=(VarSystem const&) = delete;
     template <typename Context, typename... Types>
     static auto makeVariables()
     {
